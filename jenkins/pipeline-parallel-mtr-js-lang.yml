@@ -1,13 +1,13 @@
 - job-template:
-    name: percona-server-{ps_version}-pipeline-parallel-mtr
+    name: percona-server-{ps_version}-pipeline-parallel-mtr-js-lang
     project-type: pipeline
     description: |
         <b>Do not make changes to the pipeline definition via the web interface!<br>
         (Do not use 'Configure' option on the left for changing the pipeline definition)<br>
-        Change <a href="{scripts_repo}/tree/{scripts_branch}/jenkins/pipeline-parallel-mtr.yml">pipeline-parallel-mtr.yml</a>
-           and <a href="{scripts_repo}/tree/{scripts_branch}/jenkins/pipeline-parallel-mtr.groovy">pipeline-parallel-mtr.groovy</a>
+        Change <a href="{scripts_repo}/tree/{scripts_branch}/jenkins/pipeline-parallel-mtr-js-lang.yml">pipeline-parallel-mtr-js-lang.yml</a>
+           and <a href="{scripts_repo}/tree/{scripts_branch}/jenkins/pipeline-parallel-mtr-js-lang.groovy">pipeline-parallel-mtr-js-lang.groovy</a>
         in the <a href="{scripts_repo}/tree/{scripts_branch}/jenkins">git repo</a> instead.</b><br>
-        Then update pipeline with "jenkins-jobs --server ps80.cd update jenkins/pipeline-parallel-mtr.yml".
+        Then update pipeline with "jenkins-jobs --server ps80.cd update jenkins/pipeline-parallel-mtr-js-lang.yml".
     concurrent: true
     pipeline-scm:
       scm:
@@ -17,7 +17,7 @@
             - "{scripts_branch}"
             wipe-workspace: false
       lightweight-checkout: true
-      script-path: jenkins/pipeline-parallel-mtr.groovy
+      script-path: jenkins/pipeline-parallel-mtr-js-lang.groovy
     parameters:
     - string:
         name: BUILD_NUMBER_BINARIES
@@ -194,7 +194,7 @@
     - string:
         name: JENKINS_SCRIPTS_REPO
         default: '{scripts_repo}'
-        description: Download the build scripts from this repository, except for the Groovy script referenced by the path defined in pipeline-parallel-mtr.yml
+        description: Download the build scripts from this repository, except for the Groovy script referenced by the path defined in pipeline-parallel-mtr-js-lang.yml
     - string:
         name: JENKINS_SCRIPTS_BRANCH
         default: '{scripts_branch}'
@@ -204,35 +204,15 @@
         description: Internal parameter, do not modify
     - hidden:
         name: PIPELINE_NAME
-        default: 'percona-server-{ps_version}-pipeline-parallel-mtr'
+        default: 'percona-server-{ps_version}-pipeline-parallel-mtr-js-lang'
         description: 'Internal pipeline name (hidden)'
 
 - project:
-    name: pipeline-parallel-mtr-8.0
-    ps_version: 8.0
-    branch_name: '8.0'
-    mtr_opts: --unit-tests-report --mem --big-test
-    scripts_repo: https://github.com/Percona-Lab/ps-build
-    scripts_branch: '8.0'
-    docker_os_list:
-      - centos:8
-      - oraclelinux:9
-      - ubuntu:focal
-      - ubuntu:jammy
-      - ubuntu:noble
-      - debian:bullseye
-      - debian:bookworm
-    sanitizer_opts_list:
-      -
-    jobs:
-      - percona-server-{ps_version}-pipeline-parallel-mtr
-
-- project:
-    name: pipeline-parallel-mtr-8.x
+    name: pipeline-parallel-mtr-8.x-js-lang
     ps_version: 8.x
     branch_name: '8.4'
     mtr_opts: --unit-tests-report --mem --big-test
-    scripts_repo: https://github.com/Percona-Lab/ps-build
+    scripts_repo: https://github.com/dlenev/ps-build
     scripts_branch: '8.0'
     docker_os_list:
       - centos:8
@@ -245,43 +225,4 @@
     sanitizer_opts_list:
       -
     jobs:
-      - percona-server-{ps_version}-pipeline-parallel-mtr
-
-- project:
-    name: pipeline-parallel-mtr-9.x
-    ps_version: 9.x
-    branch_name: 'trunk'
-    mtr_opts: --unit-tests-report --mem --big-test
-    scripts_repo: https://github.com/Percona-Lab/ps-build
-    scripts_branch: '8.0'
-    docker_os_list:
-      - centos:8
-      - oraclelinux:9
-      - ubuntu:jammy
-      - ubuntu:noble
-      - debian:bookworm
-    sanitizer_opts_list:
-      -
-    jobs:
-      - percona-server-{ps_version}-pipeline-parallel-mtr
-
-- project:
-    name: pipeline-parallel-mtr-8.0-valgrind
-    ps_version: 8.0-valgrind
-    branch_name: release-8.0.42-33
-    mtr_opts: --unit-tests-report --mysqld=--innodb_use_native_aio=0 --suite-timeout=600000 --retry-failure=0
-    scripts_repo: https://github.com/Percona-Lab/ps-build
-    scripts_branch: '8.0'
-    docker_os_list:
-      - ubuntu:noble
-      - debian:bookworm
-    sanitizer_opts_list:
-      - -DWITH_VALGRIND=ON
-      - -DWITH_ASAN=ON -DWITH_ASAN_SCOPE=ON
-      - -DWITH_ASAN=ON
-      - -DWITH_ASAN=ON -DWITH_ASAN_SCOPE=ON -DWITH_UBSAN=ON
-      - -DWITH_ASAN=ON -DWITH_UBSAN=ON
-      - -DWITH_UBSAN=ON
-      - -DWITH_MSAN=ON
-    jobs:
-      - percona-server-{ps_version}-pipeline-parallel-mtr
+      - percona-server-{ps_version}-pipeline-parallel-mtr-js-lang
